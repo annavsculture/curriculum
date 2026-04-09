@@ -180,11 +180,27 @@ async function loadAreaSyllabuses(treeItem, area) {
   }
 }
 
+// Stage → allowed URL slug patterns
+const STAGE_SLUG_PATTERNS = {
+  primary:   [/k-6/, /k-10/],
+  secondary: [/7-10/, /7-8/, /k-10/],
+  senior:    [/11-12/, /stage-6/, /stage6/],
+};
+
+function slugMatchesStage(href, stage) {
+  // The slug is the path segment just before /overview
+  const slug = href.replace('/overview', '').split('/').pop();
+  const patterns = STAGE_SLUG_PATTERNS[stage];
+  if (!patterns) return true; // unknown stage → don't filter
+  return patterns.some(p => p.test(slug));
+}
+
 async function loadStageSyllabuses(treeItem, stage) {
   try {
     const html = await fetchPage(`/stages/${stage}`);
     const doc = parseDoc(html);
-    const links = extractSyllabusLinks(doc);
+    const links = extractSyllabusLinks(doc)
+      .filter(({ href }) => slugMatchesStage(href, stage)); // ← filtering fix
 
     links.forEach(({ title, href }) => {
       const child = document.createElement('wa-tree-item');
