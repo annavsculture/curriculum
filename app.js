@@ -236,16 +236,19 @@ function openSyllabus(basePath, title) {
 
   $('syllabus-title').textContent = title;
 
-  // Build tabs
+  // Build tabs — this also destroys the old element, killing old listeners
   const tabGroup = $('section-tabs');
-  tabGroup.innerHTML = SECTIONS.map(s => `
+  const newTabGroup = tabGroup.cloneNode(false); // clone without children or listeners
+  tabGroup.parentNode.replaceChild(newTabGroup, tabGroup);
+
+  newTabGroup.innerHTML = SECTIONS.map(s => `
     <wa-tab slot="nav" panel="${s}">${capitalise(s)}</wa-tab>
     <wa-tab-panel name="${s}"></wa-tab-panel>
   `).join('');
 
-  tabGroup.addEventListener('wa-tab-show', e => {
+  newTabGroup.addEventListener('wa-tab-show', e => {
     loadSection(basePath, e.detail.name);
-  }, { once: false });
+  });
 
   showView('syllabus');
   loadSection(basePath, 'overview');
@@ -253,6 +256,8 @@ function openSyllabus(basePath, title) {
 
 async function loadSection(basePath, section) {
   state.currentSyllabus.section = section;
+  const loadId = Symbol(); // unique token for this load
+  state._loadId = loadId;
 
   const loading = $('section-loading');
   const content = $('section-content');
@@ -262,15 +267,17 @@ async function loadSection(basePath, section) {
 
   try {
     const html = await fetchPage(`${basePath}/${section}`);
+    if (state._loadId !== loadId) return; // stale — a newer load started, abort
     const doc = parseDoc(html);
     content.innerHTML = extractMainContent(doc);
   } catch (e) {
+    if (state._loadId !== loadId) return;
     content.innerHTML = `
       <div class="error-state">
         <p>Couldn't load this section. <a href="${BASE}${basePath}/${section}" target="_blank">Open on curriculum.nsw.edu.au ↗</a></p>
       </div>`;
   } finally {
-    loading.classList.add('hidden');
+    if (state._loadId === loadId) loading.classList.add('hidden');
   }
 }
 
