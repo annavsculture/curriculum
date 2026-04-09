@@ -230,8 +230,6 @@ function wireTree(treeId) {
   });
 }
 
-wireTree('tree-area');
-wireTree('tree-stage');
 
 // ── Syllabus view ────────────────────────────────────────────────────────────
 
@@ -297,4 +295,14 @@ function capitalise(str) {
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 
+// Wait for Web Awesome components to be ready before wiring events
+await Promise.allSettled([
+  customElements.whenDefined('wa-tree'),
+  customElements.whenDefined('wa-tree-item'),
+  customElements.whenDefined('wa-tab-group'),
+  customElements.whenDefined('wa-tab'),
+]);
+
+wireTree('tree-area');
+wireTree('tree-stage');
 showView('welcome');
