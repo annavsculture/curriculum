@@ -31,9 +31,13 @@ const STAGE_META = {
 
 async function fetchPage(path) {
   const url = `${BASE}${path}`;
+  console.log('Fetching:', url);
   const res = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
+  console.log('Response status:', res.status, 'ok:', res.ok);
   if (!res.ok) throw new Error(`HTTP ${res.status} for ${path}`);
-  return res.text();
+  const text = await res.text();
+  console.log('Response length:', text.length, 'preview:', text.slice(0, 200));
+  return text;
 }
 
 function parseDoc(html) {
@@ -258,6 +262,13 @@ async function loadSection(basePath, section) {
   state.currentSyllabus.section = section;
   const loadId = Symbol(); // unique token for this load
   state._loadId = loadId;
+
+const doc = parseDoc(html);
+console.log('Parsed doc body length:', doc.body.innerHTML.length);
+console.log('extractMainContent result:', extractMainContent(doc).slice(0, 300));
+content.innerHTML = extractMainContent(doc);
+
+
 
   const loading = $('section-loading');
   const content = $('section-content');
