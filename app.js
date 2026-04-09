@@ -260,15 +260,8 @@ function openSyllabus(basePath, title) {
 
 async function loadSection(basePath, section) {
   state.currentSyllabus.section = section;
-  const loadId = Symbol(); // unique token for this load
+  const loadId = Symbol();
   state._loadId = loadId;
-
-const doc = parseDoc(html);
-console.log('Parsed doc body length:', doc.body.innerHTML.length);
-console.log('extractMainContent result:', extractMainContent(doc).slice(0, 300));
-content.innerHTML = extractMainContent(doc);
-
-
 
   const loading = $('section-loading');
   const content = $('section-content');
@@ -278,11 +271,14 @@ content.innerHTML = extractMainContent(doc);
 
   try {
     const html = await fetchPage(`${basePath}/${section}`);
-    if (state._loadId !== loadId) return; // stale — a newer load started, abort
+    if (state._loadId !== loadId) return;
     const doc = parseDoc(html);
+    console.log('Parsed doc body length:', doc.body.innerHTML.length);
+    console.log('extractMainContent result:', extractMainContent(doc).slice(0, 300));
     content.innerHTML = extractMainContent(doc);
   } catch (e) {
     if (state._loadId !== loadId) return;
+    console.error('loadSection error:', e);
     content.innerHTML = `
       <div class="error-state">
         <p>Couldn't load this section. <a href="${BASE}${basePath}/${section}" target="_blank">Open on curriculum.nsw.edu.au ↗</a></p>
@@ -291,6 +287,7 @@ content.innerHTML = extractMainContent(doc);
     if (state._loadId === loadId) loading.classList.add('hidden');
   }
 }
+
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
