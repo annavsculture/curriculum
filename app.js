@@ -10,21 +10,20 @@ const BASE = 'https://curriculum.nsw.edu.au';
 const SECTIONS = ['overview', 'rationale', 'aim', 'outcomes', 'content', 'assessment', 'glossary'];
 
 const AREA_META = {
-  english:       { label: 'English',                        icon: 'book' },
-  mathematics:   { label: 'Mathematics',                    icon: 'calculator' },
-  science:       { label: 'Science',                        icon: 'flask' },
-  tas:           { label: 'Technological & Applied Studies', icon: 'screwdriver-wrench' },
-  hsie:          { label: 'HSIE',                           icon: 'globe' },
-  'creative-arts': { label: 'Creative Arts',                icon: 'palette' },
-  pdhpe:         { label: 'PDHPE',                          icon: 'heart-pulse' },
-  languages:     { label: 'Languages',                      icon: 'language' },
-  vet:           { label: 'VET',                            icon: 'briefcase' },
+  english:         { label: 'English',                      icon: 'book-open',          faIcon: 'fa-book',                 color: '#6366f1' },
+  mathematics:     { label: 'Mathematics',                  icon: 'calculator',         faIcon: 'fa-square-root-variable', color: '#f59e0b' },
+  science:         { label: 'Science',                      icon: 'flask',              faIcon: 'fa-flask',                color: '#10b981' },
+  tas:             { label: 'Technological & Applied Studies', icon: 'screwdriver-wrench', faIcon: 'fa-screwdriver-wrench', color: '#f97316' },
+  hsie:            { label: 'HSIE',                         icon: 'globe',              faIcon: 'fa-globe',                color: '#3b82f6' },
+  'creative-arts': { label: 'Creative Arts',                icon: 'palette',            faIcon: 'fa-palette',              color: '#ec4899' },
+  pdhpe:           { label: 'PDHPE',                        icon: 'heart-pulse',        faIcon: 'fa-heart-pulse',          color: '#ef4444' },
+  languages:       { label: 'Languages',                    icon: 'language',           faIcon: 'fa-language',             color: '#8b5cf6' },
+  vet:             { label: 'VET',                          icon: 'briefcase',          faIcon: 'fa-briefcase',            color: '#64748b' },
 };
-
 const STAGE_META = {
-  primary:   { label: 'Primary (K–6)',      icon: 'child' },
-  secondary: { label: 'Secondary (7–10)',   icon: 'school' },
-  senior:    { label: 'Senior (11–12)',     icon: 'graduation-cap' },
+  primary:   { label: 'Primary (K–6)',    icon: 'child',          faIcon: 'fa-child',          color: '#f59e0b' },
+  secondary: { label: 'Secondary (7–10)', icon: 'school',         faIcon: 'fa-school',         color: '#3b82f6' },
+  senior:    { label: 'Senior (11–12)',   icon: 'graduation-cap', faIcon: 'fa-graduation-cap', color: '#8b5cf6' },
 };
 
 // ── Proxy fetch ──────────────────────────────────────────────────────────────
@@ -295,6 +294,21 @@ function capitalise(str) {
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 
+
+function buildTreeItemLabel(text, faIcon, color) {
+  const wrapper = document.createElement('span');
+  wrapper.className = 'tree-item-label';
+  const iconEl = document.createElement('i');
+  iconEl.className = `fa-solid ${faIcon} fa-item-icon`;
+  iconEl.style.color = color;
+  const textEl = document.createElement('span');
+  textEl.textContent = text;
+  wrapper.appendChild(iconEl);
+  wrapper.appendChild(textEl);
+  return wrapper;
+}
+
+
 // Wait for Web Awesome components to be ready before wiring events
 await Promise.allSettled([
   customElements.whenDefined('wa-tree'),
@@ -306,3 +320,25 @@ await Promise.allSettled([
 wireTree('tree-area');
 wireTree('tree-stage');
 showView('welcome');
+
+// Decorate tree items with FA icons
+Object.entries(AREA_META).forEach(([area, meta]) => {
+  const item = document.querySelector(`#tree-area > wa-tree-item[data-area="${area}"]`);
+  if (!item) return;
+  item.textContent = '';
+  item.appendChild(buildTreeItemLabel(meta.label, meta.faIcon, meta.color));
+});
+Object.entries(STAGE_META).forEach(([stage, meta]) => {
+  const item = document.querySelector(`#tree-stage > wa-tree-item[data-stage="${stage}"]`);
+  if (!item) return;
+  item.textContent = '';
+  item.appendChild(buildTreeItemLabel(meta.label, meta.faIcon, meta.color));
+});
+
+// Add arrow to welcome cards
+document.querySelectorAll('.welcome-card').forEach(card => {
+  const arrow = document.createElement('i');
+  arrow.className = 'fa-solid fa-arrow-right card-arrow';
+  card.appendChild(arrow);
+});
+
