@@ -1,0 +1,321 @@
+/* ── Reset for wa-page ── */
+html, body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--wa-font-sans, system-ui, sans-serif);
+}
+
+/* ── Header ── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  height: 100%;
+  gap: 1rem;
+}
+
+.header-start {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-end {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.menu-btn {
+  /* Only visible on mobile — wa-page hides data-toggle-nav on desktop */
+}
+
+.site-title {
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.site-title-main {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--wa-color-neutral-fill-loud, #111);
+}
+
+.site-title-sub {
+  font-size: 0.75rem;
+  color: var(--wa-color-neutral-text-quiet, #666);
+  font-weight: 400;
+}
+
+/* ── Sidebar ── */
+.sidebar-nav {
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.nav-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wa-color-neutral-text-quiet, #999);
+  padding: 0.75rem 0.5rem 0.35rem;
+}
+
+.browse-toggle {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.browse-toggle wa-button {
+  flex: 1;
+  font-size: 0.8rem;
+}
+
+.nav-tree-container {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-tree {
+  --indent-guide-width: 1px;
+  font-size: 0.875rem;
+}
+
+.nav-footer {
+  border-top: 1px solid var(--wa-color-neutral-border-quiet, #eee);
+  padding-top: 0.75rem;
+  margin-top: auto;
+}
+
+/* ── Main views ── */
+.main-content {
+  padding: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.view {
+  padding: 2rem;
+  max-width: 900px;
+}
+
+.view.hidden { display: none; }
+.hidden { display: none !important; }
+
+/* ── Welcome ── */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.welcome-icon {
+  margin-bottom: 0.25rem;
+}
+
+.welcome-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.welcome-sub {
+  color: var(--wa-color-neutral-text-quiet, #555);
+  margin: 0;
+  max-width: 44ch;
+}
+
+.welcome-cards {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.welcome-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--wa-color-neutral-border-quiet, #e0e0e0);
+  border-radius: var(--wa-border-radius-large, 0.75rem);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  min-width: 180px;
+}
+
+.welcome-card:hover {
+  border-color: var(--wa-color-brand-border-loud, #0066cc);
+  box-shadow: 0 0 0 3px var(--wa-color-brand-fill-quiet, #e6f0ff);
+}
+
+.welcome-card strong {
+  font-size: 0.95rem;
+}
+
+.welcome-card span {
+  font-size: 0.8rem;
+  color: var(--wa-color-neutral-text-quiet, #666);
+}
+
+/* ── View header ── */
+.view-header {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--wa-color-neutral-border-quiet, #eee);
+  padding-bottom: 1rem;
+}
+
+.view-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.view-subtitle {
+  font-size: 0.85rem;
+  color: var(--wa-color-neutral-text-quiet, #777);
+  margin: 0;
+}
+
+/* ── Syllabus grid ── */
+.syllabus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.syllabus-card {
+  border: 1px solid var(--wa-color-neutral-border-quiet, #e0e0e0);
+  border-radius: var(--wa-border-radius-large, 0.75rem);
+  padding: 1.1rem 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.syllabus-card:hover {
+  border-color: var(--wa-color-brand-border-loud, #0066cc);
+  box-shadow: 0 0 0 3px var(--wa-color-brand-fill-quiet, #e6f0ff);
+}
+
+.syllabus-card-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.syllabus-card-meta {
+  font-size: 0.78rem;
+  color: var(--wa-color-neutral-text-quiet, #777);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+/* ── Syllabus content ── */
+.syllabus-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--wa-color-neutral-text-quiet, #666);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--wa-border-radius-medium, 0.4rem);
+  white-space: nowrap;
+}
+
+.back-btn:hover {
+  background: var(--wa-color-neutral-fill-quiet, #f5f5f5);
+  color: var(--wa-color-neutral-text-loud, #111);
+}
+
+#section-tabs {
+  margin-top: 0.5rem;
+}
+
+.section-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  color: var(--wa-color-neutral-text-quiet, #777);
+  font-size: 0.9rem;
+}
+
+/* ── Rendered NSW content ── */
+.section-content {
+  padding: 1.5rem 0 3rem;
+  line-height: 1.75;
+  font-size: 0.95rem;
+}
+
+.section-content h1 { font-size: 1.6rem; font-weight: 600; margin: 0 0 1rem; }
+.section-content h2 { font-size: 1.2rem; font-weight: 600; margin: 2rem 0 0.75rem; }
+.section-content h3 { font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+.section-content h4 { font-size: 0.9rem; font-weight: 600; margin: 1rem 0 0.4rem; }
+.section-content p  { margin: 0 0 0.85rem; }
+.section-content ul, .section-content ol { margin: 0.5rem 0 1rem 1.4rem; }
+.section-content li { margin-bottom: 0.3rem; }
+.section-content a  { color: var(--wa-color-brand-text-loud, #0055cc); }
+.section-content img { max-width: 100%; border-radius: 0.5rem; margin: 1rem 0; }
+.section-content table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.875rem;
+  margin: 1rem 0;
+}
+.section-content th, .section-content td {
+  border: 1px solid var(--wa-color-neutral-border-quiet, #ddd);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.section-content th {
+  background: var(--wa-color-neutral-fill-quiet, #f8f8f8);
+  font-weight: 600;
+}
+
+/* ── Error / empty state ── */
+.error-state {
+  padding: 2rem 0;
+  color: var(--wa-color-danger-text-loud, #cc0000);
+  font-size: 0.9rem;
+}
+
+.error-state a {
+  color: var(--wa-color-brand-text-loud, #0055cc);
+}
+
+/* ── Responsive ── */
+@media (max-width: 800px) {
+  .view {
+    padding: 1.25rem;
+  }
+  .welcome-cards {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "nsw-curriculum-explorer",
+  "version": "1.0.0",
+  "description": "A custom interface for browsing the NSW Curriculum (curriculum.nsw.edu.au)",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "^37.0.0"
+  }
+}

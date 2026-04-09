@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NSW Curriculum</title>
+
+  <!-- Web Awesome -->
+  <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.6/dist/styles/webawesome.css" />
+  <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.6/dist/webawesome.loader.js"></script>
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<wa-page mobile-breakpoint="800" id="app-page">
+
+  <!-- ── Header ── -->
+  <header slot="header" class="app-header">
+    <div class="header-start">
+      <wa-button appearance="plain" data-toggle-nav class="menu-btn" aria-label="Toggle navigation">
+        <wa-icon name="bars" slot="prefix"></wa-icon>
+      </wa-button>
+      <a href="/" class="site-title" id="home-link">
+        <span class="site-title-main">NSW Curriculum</span>
+        <span class="site-title-sub">Explorer</span>
+      </a>
+    </div>
+    <div class="header-end">
+      <wa-badge id="stage-badge" appearance="filled" class="hidden"></wa-badge>
+    </div>
+  </header>
+
+  <!-- ── Sidebar nav ── -->
+  <nav slot="nav" class="sidebar-nav">
+
+    <!-- Browse mode toggle -->
+    <div class="nav-section-label">Browse by</div>
+    <div class="browse-toggle">
+      <wa-button id="btn-by-area" size="small" appearance="filled" onclick="App.setBrowseMode('area')">Learning area</wa-button>
+      <wa-button id="btn-by-stage" size="small" appearance="outlined" onclick="App.setBrowseMode('stage')">Stage</wa-button>
+    </div>
+
+    <!-- Learning areas tree -->
+    <div id="nav-area" class="nav-tree-container">
+      <div class="nav-section-label">Learning areas</div>
+      <wa-tree id="tree-area" class="nav-tree" selection="leaf">
+        <wa-tree-item data-area="english" lazy>English</wa-tree-item>
+        <wa-tree-item data-area="mathematics" lazy>Mathematics</wa-tree-item>
+        <wa-tree-item data-area="science" lazy>Science</wa-tree-item>
+        <wa-tree-item data-area="tas" lazy>Technological &amp; Applied Studies</wa-tree-item>
+        <wa-tree-item data-area="hsie" lazy>HSIE</wa-tree-item>
+        <wa-tree-item data-area="creative-arts" lazy>Creative Arts</wa-tree-item>
+        <wa-tree-item data-area="pdhpe" lazy>PDHPE</wa-tree-item>
+        <wa-tree-item data-area="languages" lazy>Languages</wa-tree-item>
+        <wa-tree-item data-area="vet" lazy>VET</wa-tree-item>
+      </wa-tree>
+    </div>
+
+    <!-- Stages tree -->
+    <div id="nav-stage" class="nav-tree-container hidden">
+      <div class="nav-section-label">Stages</div>
+      <wa-tree id="tree-stage" class="nav-tree" selection="leaf">
+        <wa-tree-item data-stage="primary" lazy>Primary (K–6)</wa-tree-item>
+        <wa-tree-item data-stage="secondary" lazy>Secondary (7–10)</wa-tree-item>
+        <wa-tree-item data-stage="senior" lazy>Senior (11–12)</wa-tree-item>
+      </wa-tree>
+    </div>
+
+    <!-- NESA link -->
+    <div class="nav-footer">
+      <wa-button appearance="plain" size="small" href="https://curriculum.nsw.edu.au" target="_blank">
+        <wa-icon name="arrow-up-right-from-square" slot="suffix" style="font-size:11px"></wa-icon>
+        curriculum.nsw.edu.au
+      </wa-button>
+    </div>
+
+  </nav>
+
+  <!-- ── Main content ── -->
+  <main slot="main" class="main-content">
+
+    <!-- Welcome screen -->
+    <div id="view-welcome" class="view">
+      <div class="welcome">
+        <div class="welcome-icon">
+          <wa-icon name="book-open" style="font-size: 3rem; color: var(--wa-color-brand-fill-loud)"></wa-icon>
+        </div>
+        <h1 class="welcome-title">NSW Curriculum Explorer</h1>
+        <p class="welcome-sub">Browse syllabuses by learning area or stage using the navigation panel.</p>
+        <div class="welcome-cards">
+          <div class="welcome-card" onclick="App.setBrowseMode('area')">
+            <wa-icon name="shapes" style="font-size:1.5rem"></wa-icon>
+            <strong>By learning area</strong>
+            <span>English, Maths, Science&hellip;</span>
+          </div>
+          <div class="welcome-card" onclick="App.setBrowseMode('stage')">
+            <wa-icon name="graduation-cap" style="font-size:1.5rem"></wa-icon>
+            <strong>By stage</strong>
+            <span>Primary, Secondary, Senior</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Syllabus list screen (shown when an area/stage is selected but no syllabus yet) -->
+    <div id="view-list" class="view hidden">
+      <div class="view-header">
+        <h2 id="list-title" class="view-title"></h2>
+        <p id="list-count" class="view-subtitle"></p>
+      </div>
+      <div id="syllabus-grid" class="syllabus-grid"></div>
+    </div>
+
+    <!-- Syllabus content screen -->
+    <div id="view-syllabus" class="view hidden">
+      <div class="view-header">
+        <div class="syllabus-header-meta">
+          <button class="back-btn" onclick="App.goBack()">
+            <wa-icon name="arrow-left" style="font-size:13px"></wa-icon> Back
+          </button>
+          <h2 id="syllabus-title" class="view-title"></h2>
+        </div>
+        <wa-tab-group id="section-tabs" no-scroll-controls>
+          <!-- tabs injected by JS -->
+        </wa-tab-group>
+      </div>
+      <div id="section-loading" class="section-loading hidden">
+        <wa-spinner></wa-spinner> Loading&hellip;
+      </div>
+      <div id="section-content" class="section-content"></div>
+    </div>
+
+  </main>
+
+</wa-page>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>
