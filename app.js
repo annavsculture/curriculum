@@ -77,8 +77,13 @@ function extractMainContent(doc) {
   if (!container) container = doc.body;
 
   // Remove noise
-  const remove = ['nav', 'header', 'footer', '.breadcrumb', '.sidebar', 'script', 'style',
-                   '[class*="nav"]', '[class*="footer"]', '[class*="header"]'];
+
+
+const remove = ['nav', 'header', 'footer', '.breadcrumb', '.sidebar', 'script', 'style',
+                 '[class*="nav"]', '[class*="footer"]', '[class*="header"]',
+                 '[class*="CopyToClipboard"]']; 
+
+
   remove.forEach(sel => container.querySelectorAll(sel).forEach(el => el.remove()));
 
   // ── NEW: Remove the page title block (syllabus name + download button) ──
