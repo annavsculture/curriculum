@@ -10,15 +10,15 @@ const BASE = 'https://curriculum.nsw.edu.au';
 const SECTIONS = ['overview', 'rationale-aim', 'outcomes', 'content', 'assessment', 'glossary'];
 
 const AREA_META = {
-  english:         { label: 'English',                      icon: 'book-open',          faIcon: 'fa-book',                 color: '#6366f1' },
-  mathematics:     { label: 'Mathematics',                  icon: 'calculator',         faIcon: 'fa-square-root-variable', color: '#f59e0b' },
-  science:         { label: 'Science',                      icon: 'flask',              faIcon: 'fa-flask',                color: '#10b981' },
-  tas:             { label: 'Technological & Applied Studies', icon: 'screwdriver-wrench', faIcon: 'fa-screwdriver-wrench', color: '#f97316' },
-  hsie:            { label: 'HSIE',                         icon: 'globe',              faIcon: 'fa-globe',                color: '#3b82f6' },
-  'creative-arts': { label: 'Creative Arts',                icon: 'palette',            faIcon: 'fa-palette',              color: '#ec4899' },
-  pdhpe:           { label: 'PDHPE',                        icon: 'heart-pulse',        faIcon: 'fa-heart-pulse',          color: '#ef4444' },
-  languages:       { label: 'Languages',                    icon: 'language',           faIcon: 'fa-language',             color: '#8b5cf6' },
-  vet:             { label: 'VET',                          icon: 'briefcase',          faIcon: 'fa-briefcase',            color: '#64748b' },
+  english:         { label: 'English',                          icon: 'book-open',          faIcon: 'fa-book',                  color: '#6366f1' },
+  mathematics:     { label: 'Mathematics',                      icon: 'calculator',         faIcon: 'fa-square-root-variable',  color: '#f59e0b' },
+  science:         { label: 'Science',                          icon: 'flask',              faIcon: 'fa-flask',                 color: '#10b981' },
+  tas:             { label: 'Technological & Applied Studies',  icon: 'screwdriver-wrench', faIcon: 'fa-screwdriver-wrench',    color: '#f97316' },
+  hsie:            { label: 'HSIE',                             icon: 'globe',              faIcon: 'fa-globe',                 color: '#3b82f6' },
+  'creative-arts': { label: 'Creative Arts',                    icon: 'palette',            faIcon: 'fa-palette',               color: '#ec4899' },
+  pdhpe:           { label: 'PDHPE',                            icon: 'heart-pulse',        faIcon: 'fa-heart-pulse',           color: '#ef4444' },
+  languages:       { label: 'Languages',                        icon: 'language',           faIcon: 'fa-language',              color: '#8b5cf6' },
+  vet:             { label: 'VET',                              icon: 'briefcase',          faIcon: 'fa-briefcase',             color: '#64748b' },
 };
 const STAGE_META = {
   primary:   { label: 'Primary (K–6)',    icon: 'child',          faIcon: 'fa-child',          color: '#f59e0b' },
@@ -68,7 +68,6 @@ function extractSyllabusLinks(doc) {
 // ── Content sanitisation ─────────────────────────────────────────────────────
 
 function extractMainContent(doc) {
-  // Try main content selectors in order of preference
   const selectors = ['main', '[role="main"]', '#content', '.content-area', 'article'];
   let container = null;
   for (const sel of selectors) {
@@ -81,6 +80,36 @@ function extractMainContent(doc) {
   const remove = ['nav', 'header', 'footer', '.breadcrumb', '.sidebar', 'script', 'style',
                    '[class*="nav"]', '[class*="footer"]', '[class*="header"]'];
   remove.forEach(sel => container.querySelectorAll(sel).forEach(el => el.remove()));
+
+  // ── NEW: Remove the page title block (syllabus name + download button) ──
+  // The NSW site renders an h1 with the full syllabus title at the top of each section
+  // page — we don't need it since our app already shows the title
+  const h1 = container.querySelector('h1');
+  if (h1) {
+    // Also remove any immediately following download/link block
+    let next = h1.nextElementSibling;
+    while (next && (next.tagName === 'P' || next.tagName === 'DIV') && 
+           (next.querySelector('a[href*="download"]') || next.querySelector('button') ||
+            next.textContent.trim().length < 100)) {
+      const toRemove = next;
+      next = next.nextElementSibling;
+      toRemove.remove();
+    }
+    h1.remove();
+  }
+
+  // ── NEW: Replace black anchor icon boxes with plain anchor links ──
+  // The NSW site uses icon-based anchor links that render as dark boxes
+  // without their icon font. Convert them to simple # links.
+  container.querySelectorAll('a[href^="#"]').forEach(a => {
+    const isIconOnly = a.textContent.trim() === '' || 
+                       a.querySelector('svg, img, [class*="icon"]');
+    if (isIconOnly) {
+      // Replace with a visible anchor symbol
+      a.textContent = '§';
+      a.style.cssText = 'color: var(--wa-color-neutral-text-quiet, #999); text-decoration: none; font-size: 0.85em; margin-left: 0.4em;';
+    }
+  });
 
   // Fix relative links
   container.querySelectorAll('a[href]').forEach(a => {
