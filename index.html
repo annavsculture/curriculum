@@ -105,18 +105,33 @@
         </div>
         <h1 class="welcome-title">NSW Curriculum Explorer</h1>
         <p class="welcome-sub">Browse syllabuses by learning area or stage using the navigation panel.</p>
-        <div class="welcome-cards">
-          <div class="welcome-card" onclick="App.setBrowseMode('area')">
-            <wa-icon name="shapes" style="font-size:1.5rem"></wa-icon>
-            <strong>By learning area</strong>
-            <span>English, Maths, Science&hellip;</span>
-          </div>
-          <div class="welcome-card" onclick="App.setBrowseMode('stage')">
-            <wa-icon name="graduation-cap" style="font-size:1.5rem"></wa-icon>
-            <strong>By stage</strong>
-            <span>Primary, Secondary, Senior</span>
-          </div>
-        </div>
+<div class="welcome-cards">
+  <div class="welcome-card" onclick="App.setBrowseMode('area')">
+    <wa-icon name="shapes"></wa-icon>
+    <strong>By learning area</strong>
+    <span>English, Maths, Science…</span>
+  </div>
+  <div class="welcome-card" onclick="App.setBrowseMode('stage')">
+    <wa-icon name="graduation-cap"></wa-icon>
+    <strong>By stage</strong>
+    <span>Primary, Secondary, Senior</span>
+  </div>
+  <div class="welcome-card welcome-card--cec" onclick="App.openSpecialList('cec')">
+    <wa-icon name="building-columns"></wa-icon>
+    <strong>CEC Syllabuses</strong>
+    <span>Centre for Education and Communities</span>
+  </div>
+  <div class="welcome-card welcome-card--lifeskills" onclick="App.openSpecialList('life-skills')">
+    <wa-icon name="hand-holding-heart"></wa-icon>
+    <strong>Life Skills Syllabuses</strong>
+    <span>Life Skills, Stages 5–6</span>
+  </div>
+  <div class="welcome-card welcome-card--vet" onclick="window.open('https://curriculum.nsw.edu.au/learning-areas/vet','_blank')">
+    <wa-icon name="briefcase"></wa-icon>
+    <strong>VET Syllabuses</strong>
+    <span>Vocational Education &amp; Training</span>
+  </div>
+</div>
       </div>
     </div>
 

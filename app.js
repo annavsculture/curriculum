@@ -133,6 +133,102 @@ function showView(name) {
 
 window.App = {
 
+  openSyllabus(basePath, title) { openSyllabus(basePath, title); },
+
+  async openSpecialList(type) {
+  const SPECIAL_META = {
+    cec: {
+      title:   'CEC Syllabuses',
+      pattern: /\/learning-areas\/[^/]+\/[^/]+-cec[^/]*\/overview/,
+      color:   '#7c3aed',
+      faIcon:  'fa-building-columns',
+      label:   'CEC',
+    },
+    'life-skills': {
+      title:   'Life Skills Syllabuses',
+      pattern: /\/learning-areas\/[^/]+\/[^/]+-life-skills[^/]*\/overview/,
+      color:   '#0891b2',
+      faIcon:  'fa-hand-holding-heart',
+      label:   'Life Skills',
+    },
+  };
+  const info = SPECIAL_META[type];
+  if (!info) return;
+
+  const listTitle = $('list-title');
+  const listCount = $('list-count');
+  const grid      = $('syllabus-grid');
+
+  listTitle.textContent = info.title;
+  listCount.textContent = 'Loading…';
+  grid.innerHTML = '';
+  state.currentList    = { type: 'special', title: info.title, syllabuses: [] };
+  state.currentSyllabus = null;
+  showView('list');
+
+  try {
+    const html = await fetchPage(`/search?q=${encodeURIComponent(type)}&perPage=100`);
+    const doc  = parseDoc(html);
+
+    let syllabuses = [];
+
+    // Parse the Next.js JSON bundle embedded in the page
+    for (const script of doc.querySelectorAll('script:not([src])')) {
+      try {
+        const data = JSON.parse(script.textContent);
+        if (data?.props?.pageProps?.mappings) {
+          syllabuses = data.props.pageProps.mappings
+            .filter(m => m.params?.slug && info.pattern.test('/' + m.params.slug.join('/')))
+            .map(m => ({
+              title: m.params.pageTitle,
+              href:  '/' + m.params.slug.slice(0, -1).join('/'),  // strip /overview
+            }))
+            .filter((v, i, arr) => arr.findIndex(x => x.href === v.href) === i);
+          break;
+        }
+      } catch (_) {}
+    }
+
+    // Fallback: scan <a> links
+    if (!syllabuses.length) {
+      syllabuses = extractSyllabusLinks(doc)
+        .filter(({ href }) => info.pattern.test(href))
+        .map(({ title, href }) => ({ title, href: href.replace('/overview', '') }));
+    }
+
+    state.currentList.syllabuses = syllabuses;
+    listCount.textContent = `${syllabuses.length} syllabus${syllabuses.length !== 1 ? 'es' : ''}`;
+
+    if (!syllabuses.length) {
+      grid.innerHTML = '<p style="color:#9ca3af;padding:1rem">No syllabuses found.</p>';
+      return;
+    }
+
+    grid.innerHTML = '';
+    for (const { title, href } of syllabuses) {
+      const card = document.createElement('div');
+      card.className = 'syllabus-card';
+      card.innerHTML = `
+        <div class="syllabus-card-title">${title}</div>
+        <div class="syllabus-card-meta">
+          <i class="fa-solid ${info.faIcon}" style="color:${info.color};font-size:.7rem"></i>
+          ${info.label}
+        </div>`;
+      card.addEventListener('click', () => openSyllabus(href, title));
+      grid.appendChild(card);
+    }
+  } catch (e) {
+    console.error('openSpecialList error:', e);
+    listCount.textContent = 'Error loading syllabuses';
+    grid.innerHTML = `<div class="error-state">
+      <p>Couldn't load syllabuses.
+        <a href="https://curriculum.nsw.edu.au/search?q=${type}" target="_blank">
+          Search on curriculum.nsw.edu.au ↗
+        </a>
+      </p></div>`;
+  }
+},
+
   setBrowseMode(mode) {
     state.browseMode = mode;
     $('nav-area').classList.toggle('hidden', mode !== 'area');
@@ -357,4 +453,10 @@ document.querySelectorAll('.welcome-card').forEach(card => {
   arrow.className = 'fa-solid fa-arrow-right card-arrow';
   card.appendChild(arrow);
 });
+
+const vetCard = document.querySelector('.welcome-card--vet');
+if (vetCard) {
+  const arrow = vetCard.querySelector('.card-arrow');
+  if (arrow) arrow.className = 'fa-solid fa-arrow-up-right-from-square card-arrow';
+}
 

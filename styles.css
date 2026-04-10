@@ -314,7 +314,7 @@ html, body {
 
 .welcome-cards {
   display: grid;
-  grid-template-columns: repeat(2, minmax(200px, 280px));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 280px));
   gap: 1rem;
   margin-top: 0.75rem;
   position: relative;
@@ -335,13 +335,24 @@ html, body {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.welcome-card:first-child {
-  background: linear-gradient(135deg, #eff6ff 0%, #fff 60%);
-}
+.welcome-card:nth-child(1) { background: linear-gradient(135deg, #eff6ff 0%, #fff 60%); }
+.welcome-card:nth-child(2) { background: linear-gradient(135deg, #f0fdf4 0%, #fff 60%); }
+.welcome-card:nth-child(2):hover { border-color: #16a34a; box-shadow: 0 4px 20px rgba(22,163,74,.12), 0 0 0 3px rgba(22,163,74,.08); }
 
-.welcome-card:last-child {
-  background: linear-gradient(135deg, #f0fdf4 0%, #fff 60%);
-}
+/* CEC card */
+.welcome-card--cec { background: linear-gradient(135deg, #f5f3ff 0%, #fff 60%); }
+.welcome-card--cec wa-icon { color: #7c3aed; }
+.welcome-card--cec:hover { border-color: #7c3aed; box-shadow: 0 4px 20px rgba(124,58,237,.12), 0 0 0 3px rgba(124,58,237,.08); }
+
+/* Life Skills card */
+.welcome-card--lifeskills { background: linear-gradient(135deg, #ecfeff 0%, #fff 60%); }
+.welcome-card--lifeskills wa-icon { color: #0891b2; }
+.welcome-card--lifeskills:hover { border-color: #0891b2; box-shadow: 0 4px 20px rgba(8,145,178,.12), 0 0 0 3px rgba(8,145,178,.08); }
+
+/* VET external link card */
+.welcome-card--vet { background: linear-gradient(135deg, #f8fafc 0%, #fff 60%); }
+.welcome-card--vet wa-icon { color: #64748b; }
+.welcome-card--vet:hover { border-color: #64748b; box-shadow: 0 4px 20px rgba(100,116,139,.12), 0 0 0 3px rgba(100,116,139,.08); }
 
 .welcome-card:hover {
   border-color: #2563eb;
