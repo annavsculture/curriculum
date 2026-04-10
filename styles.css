@@ -656,6 +656,21 @@ html, body {
   color: #374151;
 }
 
+.combined-section-heading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #374151;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+.combined-section-divider {
+  border: none;
+  border-top: 1px dashed #e5e7eb;
+  margin: 2rem 0;
+}
+
+
 /* ── Error state ── */
 .error-state {
   padding: 2rem;

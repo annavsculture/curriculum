@@ -7,7 +7,7 @@
  */
 
 const BASE = 'https://curriculum.nsw.edu.au';
-const SECTIONS = ['overview', 'rationale', 'aim', 'outcomes', 'content', 'assessment', 'glossary'];
+const SECTIONS = ['overview', 'rationale-aim', 'outcomes', 'content', 'assessment', 'glossary'];
 
 const AREA_META = {
   english:         { label: 'English',                      icon: 'book-open',          faIcon: 'fa-book',                 color: '#6366f1' },
@@ -374,33 +374,50 @@ async function loadSection(basePath, section) {
 
   const loading = $('section-loading');
   const content = $('section-content');
-
   loading.classList.remove('hidden');
   content.innerHTML = '';
 
   try {
-    const html = await fetchPage(`${basePath}/${section}`);
+    // For the combined tab, fetch both pages in parallel
+    const paths = section === 'rationale-aim'
+      ? [`${basePath}/rationale`, `${basePath}/aim`]
+      : [`${basePath}/${section}`];
+
+    const htmlParts = await Promise.all(paths.map(p => fetchPage(p)));
     if (state._loadId !== loadId) return;
-    const doc = parseDoc(html);
-    console.log('Parsed doc body length:', doc.body.innerHTML.length);
-    console.log('extractMainContent result:', extractMainContent(doc).slice(0, 300));
-    content.innerHTML = extractMainContent(doc);
+
+    if (section === 'rationale-aim') {
+      // Render each part under a divider heading
+      const labels = ['Rationale', 'Aim'];
+      content.innerHTML = htmlParts.map((html, i) => {
+        const doc = parseDoc(html);
+        return `<div class="combined-section">
+          <h2 class="combined-section-heading">${labels[i]}</h2>
+          ${extractMainContent(doc)}
+        </div>`;
+      }).join('<hr class="combined-section-divider">');
+    } else {
+      const doc = parseDoc(htmlParts[0]);
+      content.innerHTML = extractMainContent(doc);
+    }
   } catch (e) {
     if (state._loadId !== loadId) return;
     console.error('loadSection error:', e);
     content.innerHTML = `
       <div class="error-state">
-        <p>Couldn't load this section. <a href="${BASE}${basePath}/${section}" target="_blank">Open on curriculum.nsw.edu.au ↗</a></p>
+        <p>Couldn't load this section.
+          <a href="${BASE}${basePath}/${section}" target="_blank">Open on curriculum.nsw.edu.au ↗</a>
+        </p>
       </div>`;
   } finally {
     if (state._loadId === loadId) loading.classList.add('hidden');
   }
 }
 
-
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function capitalise(str) {
+  if (str === 'rationale-aim') return 'Rationale / Aim';
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
